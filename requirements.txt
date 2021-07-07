@@ -139,7 +139,6 @@ SQLAlchemy-Utils==0.34.2
 supervisor==4.2.1
 sympy==1.4
 systemd-python==234
-ubuntu-advantage-tools==27.0
 ufw==0.36
 unattended-upgrades==0.1
 urllib3==1.26.5
