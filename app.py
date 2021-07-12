@@ -4,6 +4,7 @@ from flask import Flask, request, abort, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from .models import db_drop_and_create_all, setup_db, Movie, Actor
+from .auth import AuthError, requires_auth
 
 MOVIES_PER_PAGE = 10
 ACTORS_PER_PAGE = 10
@@ -39,6 +40,7 @@ def create_app(test_config=None):
     # ROUTES
     # GET Routes
     @app.route('/movies')
+    @requires_auth('get:movies')
     def get_movies():
         selection = Movie.query.order_by(Movie.id).all()
         selection_long = []
@@ -54,6 +56,7 @@ def create_app(test_config=None):
 
     # GET Routes
     @app.route('/actors')
+    @requires_auth('get:actors')
     def get_actors():
         selection = Actor.query.order_by(Actor.id).all()
         selection_long = []
@@ -69,6 +72,7 @@ def create_app(test_config=None):
 
     # DELETE Routes
     @app.route('/movies/<int:movie_id>', methods=['DELETE'])
+    @requires_auth('delete:movies')
     def delete_movie(movie_id):
         try:
             movie = Movie.query.filter(Movie.id == movie_id).one_or_none()
@@ -90,6 +94,7 @@ def create_app(test_config=None):
             abort(422)
 
     @app.route('/actors/<int:actor_id>', methods=['DELETE'])
+    @requires_auth('delete:actors')
     def delete_actor(actor_id):
         try:
             actor = Actor.query.filter(Actor.id == actor_id).one_or_none()
@@ -111,6 +116,7 @@ def create_app(test_config=None):
             abort(422)
 
     @app.route('/movies', methods=['POST', 'PUT'])
+    @requires_auth('post:movies')
     def create_movie():
         body = request.get_json()
 
@@ -148,6 +154,7 @@ def create_app(test_config=None):
             abort(422)
 
     @app.route('/actors', methods=['POST', 'PUT'])
+    @requires_auth('post:actors')
     def create_actors():
         body = request.get_json()
 
