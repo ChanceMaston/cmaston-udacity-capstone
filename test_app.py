@@ -19,11 +19,11 @@ class CapstoneTestCase(unittest.TestCase):
         self.client = self.app.test_client
         self.database_name = "capstone_test"
         self.database_path = "postgres://{}/{}".format('localhost:5432', self.database_name)
-        setup_db(self.app, self.database_path)
+        setup_db(self.app)
 
         self.new_movie = {
             'title': 'Underwater',
-            'release_date': {'day': "10", 'month': "01", 'year': "2020"}
+            'release_date': '20200110'
         }
 
         self.new_actor = {

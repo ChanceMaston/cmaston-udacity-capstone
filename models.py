@@ -35,8 +35,7 @@ class Movie(db.Model):
     id = Column(Integer().with_variant(Integer, "sqlite"), primary_key=True)
     # String Title
     title = Column(String(80), unique=True)
-    # The Release date of the movie
-    # the required datatype is [{'day': string, 'month':string, 'year':string}]
+    # String Release date of the movie (YYYYMMDD)
     release_date = Column(String(180), nullable=False)
 
     '''
@@ -47,7 +46,7 @@ class Movie(db.Model):
         return {
             'id': self.id,
             'title': self.title,
-            'release_date': json.loads(self.release_date)
+            'release_date': self.release_date
         }
 
     '''
@@ -88,7 +87,7 @@ class Movie(db.Model):
         db.session.commit()
 
     def __repr__(self):
-        return json.dumps(self.short())
+        return json.dumps(self.long())
 
 
 '''
@@ -155,4 +154,4 @@ class Actor(db.Model):
         db.session.commit()
 
     def __repr__(self):
-        return json.dumps(self.short())
+        return json.dumps(self.long())
