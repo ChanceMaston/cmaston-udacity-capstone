@@ -1,38 +1,31 @@
 import os
+import json
+from flask import Flask
+from flask_moment import Moment
+
+from flask_wtf import CSRFProtect
+csrf = CSRFProtect()
+
 from sqlalchemy import Column, String, Integer
 from flask_sqlalchemy import SQLAlchemy
-import json
+from flask_migrate import Migrate
 
 database_filename = "database.db"
 project_dir = os.path.dirname(os.path.abspath(__file__))
 database_path = "sqlite:///{}".format(os.path.join(project_dir, database_filename))
 
-db = SQLAlchemy()
+app = Flask(__name__)
+moment = Moment(app)
+csrf.init_app(app)
+db = SQLAlchemy(app)
 
 
-'''
-setup_db(app)
-    binds a flask application and a SQLAlchemy service
-'''
-def setup_db(app, database_path=database_path):
-    app.config["SQLALCHEMY_DATABASE_URI"] = database_path
-    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+def setup_db(app):
+    app.config.from_object('config')
     db.app = app
     db.init_app(app)
-    db.create_all()
+    migrate = Migrate(app, db)
 
-
-'''
-db_drop_and_create_all()
-    drops the database tables and starts fresh
-    can be used to initialize a clean database
-    !!NOTE you can change the database_filename variable to have multiple verisons of a database
-'''
-def db_drop_and_create_all():
-    db.drop_all()
-    db.create_all()
-
-# ROUTES
 '''
 Movie
 a persistent movie entity, extends the base SQLAlchemy Model
